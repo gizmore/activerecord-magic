@@ -22,7 +22,7 @@ module ActiveRecord
       def self.run
         arm_log.debug("ActiveRecord::Magic::Update.run()")
         total = 0
-        chain = ActiveRecord::Magic::Variable.get('arm_install_chain')
+        chain = ActiveRecord::Magic::Global.get('arm_install_chain')
         chain.load_installed_versions
         while chain.runs_left?
           chain.run

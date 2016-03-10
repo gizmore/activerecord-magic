@@ -13,27 +13,27 @@ describe ActiveRecord::Magic do
     # CONFIG
     describe ActiveRecord::Magic::Config do
     it('can create config') do
-      config = ActiveRecord::Magic::Config.new("arm.test.config")
+      config = ActiveRecord::Magic::Config.new("arm.test.config.yml")
       expect(config.valid?).to be(true)
     end
     it('can set config') do
-      config = ActiveRecord::Magic::Config.new("arm.test.config")
+      config = ActiveRecord::Magic::Config.new("arm.test.config.yml")
       config.database = { pool: 10, adapter: 'mysql2', encoding: 'utf8', database: 'arm_test', username: 'arm_test', password: 'arm_test' }
       expect(config.database[:adapter]).to eq('mysql2')
     end
     it('can reload config') do
-      config = ActiveRecord::Magic::Config.new("arm.test.config")
+      config = ActiveRecord::Magic::Config.new("arm.test.config.yml")
       expect(config.database[:adapter]).to eq('mysql2')
     end
     it('nils on unknown') do
-      config = ActiveRecord::Magic::Config.new("arm.test2.config")
+      config = ActiveRecord::Magic::Config.new("arm.test2.config.yml")
       expect(config.database).to eq(nil)
     end
   end
   # BASE
   describe ActiveRecord::Magic::Base do
     it('can connect to the database') do
-      config = ActiveRecord::Magic::Config.new("arm.test.config")
+      config = ActiveRecord::Magic::Config.new("arm.test.config.yml")
       expect(ActiveRecord::Magic::Base.arm_connect(config.database)).to be_truthy
     end
   end
@@ -153,5 +153,13 @@ describe ActiveRecord::Magic do
     end
   end
   
+  describe ActiveRecord::Magic::Mail do
+    it "can configure mail" do
+      config = ActiveRecord::Magic::Config.new("arm.test.config.yml")
+      ActiveRecord::Magic::Mail.configure(config) do |mail_config|
+      end
+      ActiveRecord::Magic::Mail.generic(config.mail[:staff], 'Test', 'This is a mail test to staff members.')
+    end
+  end
 
 end

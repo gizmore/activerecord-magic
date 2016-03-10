@@ -1,5 +1,3 @@
-require 'yaml'
-
 # 
 # on the fly config variable decleration and usage.
 #
@@ -7,6 +5,8 @@ module ActiveRecord
   module Magic
     class Config
       
+      require 'yaml'
+
       def initialize(path)
         arm_init_config(path)
       end
@@ -32,6 +32,8 @@ module ActiveRecord
           @store = YAML.load_file(path)
         rescue Errno::ENOENT => e
           @store = {}
+          arm_set(:app_name, 'Application')
+          arm_set(:environment, 'development')
           arm_set(:arm_version, ::ActiveRecord::Magic::VERSION)
         end
         self
@@ -47,9 +49,10 @@ module ActiveRecord
       
       def arm_set(key, value)
         key = key.to_sym
-        do_save = @store.include?(key)
-        @store[key] = value
-        arm_save_config if do_save
+        if (!@store.include?(key)) || (@store[key] != value)
+          @store[key] = value
+          arm_save_config
+        end
         self
       end
       

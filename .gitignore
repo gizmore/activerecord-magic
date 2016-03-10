@@ -40,6 +40,6 @@ Gemfile.lock
 .project
 
 # gizmore spec
-arm.test.config
-arm.test2.config
+arm.test.config.yml
+arm.test2.config.yml
 log
