@@ -1,4 +1,4 @@
-# 
+##
 # on the fly config variable decleration and usage.
 #
 module ActiveRecord

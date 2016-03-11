@@ -33,7 +33,7 @@ module ActiveRecord
           steps_to_run.each do |k,steps|
             step = steps.next
             if has_dependencies?(step)
-              arm_log.info("Installing #{steps.klass} v#{steps.step}.")
+              arm_log.info{"Installing #{steps.klass} v#{steps.step}."}
               step.run
               steps.next!
               @total += 1

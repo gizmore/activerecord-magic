@@ -23,7 +23,7 @@ module ActiveRecord::Magic
       installed = self.installed(klass)
       installed.version += 1
       installed.save!
-      arm_log.info("ActiveRecord::Magic::Record.installed!(#{klass})")
+      arm_log.info{"Installed #{klass} version #{installed.version}."}
     end
     
   end

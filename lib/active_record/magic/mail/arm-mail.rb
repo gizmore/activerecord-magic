@@ -20,7 +20,7 @@ module ActiveRecord
         if @arm_config.nil?
           raise ActiveRecord::Magic::MissingConfiguration.new("You have to call ActiveRecord::Magic::Mailer.configure in prior to use the mailer")
         end
-        arm_log.info("Sending mail to #{to}: #{subject}")
+        arm_log.info{"Sending mail to #{to}: #{subject}"}
         conf = @arm_config.mail
         mail = ::Mail.new
         mail.from = conf[:from]
@@ -28,7 +28,7 @@ module ActiveRecord
         mail.reply_to = conf[:reply_to]
         mail.subject = subject
         mail.body = body
-        arm_log.debug(mail.to_s)
+        arm_log.debug{mail.to_s}
         mail.deliver if conf[:enabled]
       end
       
@@ -39,7 +39,7 @@ module ActiveRecord
       private
       
       def self.default_config
-        arm_log.info("You have to configure mail settings in your configuration file.")
+        arm_log.info{"You have to configure mail settings in your configuration file."}
         @arm_config.mail = {
           enabled: true,
           method: :smtp,
