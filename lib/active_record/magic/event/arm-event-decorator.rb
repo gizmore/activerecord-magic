@@ -8,7 +8,7 @@ module ActiveRecord
       module Decorator
         def arm_events
           class_eval do |klass|
-            arm_log.debug{"#{klass.name} is using arm_events."}
+            arm_log.debug{"ARM::Event::arm_events enabled for #{klass.short_name}"}
             klass.send :include, ActiveRecord::Magic::Event::Extend if klass.class == Class
             klass.extend ActiveRecord::Magic::Event::Extend
           end

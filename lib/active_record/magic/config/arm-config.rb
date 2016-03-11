@@ -6,7 +6,7 @@ module ActiveRecord
     class Config
       
       require 'yaml'
-
+      
       def initialize(path)
         arm_init_config(path)
       end

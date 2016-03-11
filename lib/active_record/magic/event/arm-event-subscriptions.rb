@@ -4,6 +4,8 @@ module ActiveRecord
   module Magic
     module Event
       class Subscriptions
+        
+        @@total_hooks = 0
 
         def add(hook)
           @hooks ||= []

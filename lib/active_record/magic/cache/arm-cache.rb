@@ -10,7 +10,7 @@ module ActiveRecord
         def arm_cache
           class_eval do |klass|
 
-            arm_log.debug{"enabled arm_cache for #{klass}."}
+            arm_log.debug{"ARM::Cache::arm_cache enabled for #{klass.short_name}."}
 
             # the classes cache
             @arm_cache = {} # id

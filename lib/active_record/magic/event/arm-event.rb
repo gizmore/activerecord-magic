@@ -7,6 +7,7 @@ module ActiveRecord
       
       load "active_record/magic/event/arm-event-container.rb"
       load "active_record/magic/event/arm-event-decorator.rb"
+      load "active_record/magic/event/arm-event-exceptions.rb"
       load "active_record/magic/event/arm-event-extend.rb"
       load "active_record/magic/event/arm-event-hook.rb"
       load "active_record/magic/event/arm-event-subscriptions.rb"

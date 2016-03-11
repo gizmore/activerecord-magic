@@ -39,9 +39,9 @@ module ActiveRecord
           hook
         end
         
-        def signal(event, args)
+        def signal(source, event, args)
           unless @subscriptions.nil? || (!subscriptions.has_key?(event))
-            subscriptions[event].signal(self, event, args)
+            subscriptions[event].signal(source, event, args)
           end
           self
         end

@@ -16,7 +16,8 @@ module ActiveRecord
       def self.duplicate?(object, block)
         pos = "#{object.object_id}@#{position(block)}"
         return true if @@duplicates.has_key?(pos)
-        @@duplicates[pos] = false
+        @@duplicates[pos] = true
+        false
       end
       
     end

@@ -23,23 +23,24 @@ module ActiveRecord
 
         # subscribe to an event and target.
         def arm_subscribe(event, target=nil, &block)
-          return if ActiveRecord::Magic::Block.duplicate?(self, block)
+          raise ActiveRecord::Magic::InvalidCode.new("arm_subscribe requires a block given") unless block_given?
+          raise ActiveRecord::Magic::DuplicateEvent.new(self, event, block.source_location.join(' ')) if ActiveRecord::Magic::Block.duplicate?(self, block)
           target ||= arm_globe
-          arm_log.debug{"arm_subscribe #{event} for #{target} at #{block.source_location.join(' ')}"}
+          arm_log.debug{"ARM::Event::arm_subscribe '#{event.upcase}' for #{target.obj_id} at #{block.short_location}"}
           container = target.arm_container
           container.subscribe(event, self, block)
         end
         
         # send an event to globe
         def arm_publish(event, *args)
-          arm_globe.signal(event, args)
+          arm_globe.signal(self, event, args)
           self
         end
 
         # emit an event to local subscriptions
         def arm_emit(event, *args)
           return self if @container.nil? || @container.empty?
-          @container.signal(event, args)
+          @container.signal(self, event, args)
           self
         end
         
