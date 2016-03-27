@@ -1,33 +1,13 @@
 require 'spec_helper'
 describe ActiveRecord::Magic do
-    # UTIL
-    describe ActiveRecord::Magic::Util do
-      it('offers clamping') do
-        expect(4.6.clamp(1,3)).to eq(3)
-        expect("-4.6".clamp(1,3)).to eq(1)
-      end
-      it('offers trim') do
-        expect('aabbaa'.trim('a')).to eq('bb')
-      end
+  # UTIL
+  describe ActiveRecord::Magic::Util do
+    it('offers clamping') do
+      expect(4.6.clamp(1,3)).to eq(3)
+      expect("-4.6".clamp(1,3)).to eq(1)
     end
-    # CONFIG
-    describe ActiveRecord::Magic::Config do
-    it('can create config') do
-      config = ActiveRecord::Magic::Config.new("arm.test.config.yml")
-      expect(config.valid?).to be(true)
-    end
-    it('can set config') do
-      config = ActiveRecord::Magic::Config.new("arm.test.config.yml")
-      config.database = { pool: 10, adapter: 'mysql2', encoding: 'utf8', database: 'arm_test', username: 'arm_test', password: 'arm_test' }
-      expect(config.database[:adapter]).to eq('mysql2')
-    end
-    it('can reload config') do
-      config = ActiveRecord::Magic::Config.new("arm.test.config.yml")
-      expect(config.database[:adapter]).to eq('mysql2')
-    end
-    it('nils on unknown') do
-      config = ActiveRecord::Magic::Config.new("arm.test2.config.yml")
-      expect(config.database).to eq(nil)
+    it('offers trim') do
+      expect('aabbaa'.trim('a')).to eq('bb')
     end
   end
   # BASE
@@ -160,6 +140,11 @@ describe ActiveRecord::Magic do
       end
       ActiveRecord::Magic::Mail.generic(config.mail[:staff], 'Test', 'This is a mail test to staff members.')
     end
+  end
+
+  # SLIM POLYMORPHISM
+  describe ActiveRecord::Magic::Relation do
+    
   end
 
 end

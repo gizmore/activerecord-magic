@@ -99,6 +99,35 @@ describe ActiveRecord::Magic::Event do
     expect(hook.removed?).to be(true)
     expect(ActiveRecord::Magic::Event::Hook.total).to be(count)
   end
+  
+  it "can link other event containers" do
+    load 'event_container_spec_helper.rb'
+
+    party1 = Party.new
+    player1 = Player.new
+    player2 = Player.new
+    party1.add_player(player1)
+    player1.arm_link(party1)
+    party1.add_player(player2)
+    player2.arm_link(party1)
+
+    party2 = Party.new
+    player3 = Player.new
+    party2.add_player(player3)
+
+    party3 = Party.new
+    enemy1 = Player.new
+    enemy2 = Player.new
+    party3.add_player(enemy1)
+    party3.add_player(enemy2)
+    
+    city = City.new
+    area = Area.new
+    location = Location.new
+    
+    
+    
+  end
 
   # result = RubyProf.stop
   # printer = RubyProf::FlatPrinter.new(result)

@@ -12,9 +12,11 @@ module ActiveRecord
     load "active_record/magic/config/arm-config.rb"
     load "active_record/magic/translate/arm-translate.rb"
     load "active_record/magic/cache/arm-cache.rb"
+#    load "active_record/magic/cache/arm-relation.rb"
     load "active_record/magic/update/arm-update.rb"
     load "active_record/magic/setting/arm-setting.rb"
     load "active_record/magic/setting/arm-options.rb"
+    load "active_record/magic/param/arm-parameter.rb"
     
   end
 end

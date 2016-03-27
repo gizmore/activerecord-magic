@@ -14,23 +14,21 @@ module ActiveRecord
         
       end
       
+      module Extend
+        
+        def t(key)
+          key.to_s
+        end
+        
+      end
+      
       module Decorator
         def arm_i18n
           class_eval do |klass|
-            klass.extend ActiveRecord::Magic::Translate::Extend
+            klass.send :include, ActiveRecord::Magic::Translate::Extend
           end
         end
       end
-      
-      module Extend
-        
-        def t
-          puts 11111111
-        end
-        
-      end
-      
-      
       
     end
   end
