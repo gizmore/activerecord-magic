@@ -5,6 +5,7 @@ module ActiveRecord
       self.table_name = 'arm_groups'
 
       arm_cache
+      arm_named_cache(:name)
 
       arm_install('ActiveRecord::Magic::Permission' => 1) do |migration|
         migration.create_table(table_name) do |t|
@@ -12,7 +13,8 @@ module ActiveRecord
         end
       end
 
-      has_many :permissions, :class_name => 'ActiveRecord::Magic::Permission', :through => :groups
+      has_many :group_permissions, :class_name => 'ActiveRecord::Magic::GroupPermission'
+      has_many :permissions, :class_name => 'ActiveRecord::Magic::Permission', :through => :group_permissions
 
     end
   end

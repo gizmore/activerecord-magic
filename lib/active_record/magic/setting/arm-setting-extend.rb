@@ -2,7 +2,7 @@ module ActiveRecord
   module Magic
     module Setting
       module Extend
-        def has_setting(options)
+        def arm_setting(options)
           class_eval do |klass|
             
             # validate setting definition

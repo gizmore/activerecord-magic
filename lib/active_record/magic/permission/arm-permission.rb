@@ -5,6 +5,7 @@ module ActiveRecord
       self.table_name = 'arm_permissions'
 
       arm_cache
+      arm_named_cache(:name)
       
       arm_install() do |migration|
         migration.create_table(table_name) do |t|

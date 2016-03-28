@@ -4,7 +4,7 @@ module ActiveRecord
     module Param; end
     class Parameter
       
-      arm_i18n
+      #arm_i18n
       
       # Load core parameter classes
       Filewalker.traverse_files(File.dirname(__FILE__)+"/params") do |file|

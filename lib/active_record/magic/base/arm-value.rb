@@ -48,3 +48,4 @@ module ActiveRecord::Magic::Value
 end
 
 Object.extend ActiveRecord::Magic::Value::Extend
+Object.send :include, ActiveRecord::Magic::Value::Include
