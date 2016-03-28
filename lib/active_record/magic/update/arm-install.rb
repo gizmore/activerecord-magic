@@ -5,8 +5,10 @@ module ActiveRecord
 
         def arm_install(dependencies={}, &block)
           class_eval do |klass|
-            chain = ActiveRecord::Magic::Global.define('arm_install_chain') { ActiveRecord::Magic::Update::Chain.new }
-            chain.add_step(klass.name, dependencies, block)
+            unless ActiveRecord::Magic::Block.duplicate?(klass, block)
+              chain = ActiveRecord::Magic::Global.define('arm_install_chain') { ActiveRecord::Magic::Update::Chain.new }
+              chain.add_step(klass.name, dependencies, block)
+            end
           end
         end
 
