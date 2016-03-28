@@ -4,20 +4,19 @@ module ActiveRecord
     module Param; end
     class Parameter
       
-      #arm_i18n
-      
       # Load core parameter classes
       Filewalker.traverse_files(File.dirname(__FILE__)+"/params") do |file|
         load file
       end
       
       def self.from_setting_options(options)
-        ActiveRecord::Magic::Param::Boolean.new.from_setting_options(options)
+        type = options.delete(:type).camelize
+        klass = ActiveRecord::Magic::Param.const_get(type)
+        klass.new.from_setting_options(options)
       end
       
       def initialize
         @value = nil;
-        
       end
       
       def invalid!(key)
