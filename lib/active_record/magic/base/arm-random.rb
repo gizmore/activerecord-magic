@@ -10,7 +10,10 @@ module ActiveRecord
         end
       end
       module Extend
-        
+        def srand
+        end
+        def rand
+        end
       end
     end
   end

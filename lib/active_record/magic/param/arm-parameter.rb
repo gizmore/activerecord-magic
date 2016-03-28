@@ -10,8 +10,7 @@ module ActiveRecord
       end
       
       def self.from_setting_options(options)
-        type = options.delete(:type).camelize
-        klass = ActiveRecord::Magic::Param.const_get(type)
+        klass = ActiveRecord::Magic::Param.const_get(options[:type].to_s.camelize)
         klass.new.from_setting_options(options)
       end
       

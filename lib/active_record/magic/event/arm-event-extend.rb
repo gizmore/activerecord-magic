@@ -38,6 +38,12 @@ module ActiveRecord
           arm_globe.signal(self, event, args)
           self
         end
+        
+        # send an event to a container
+        def arm_signal(target, event, *args)
+          target.arm_container.signal(self, event, args)
+          self
+        end
 
         # emit an event to local subscriptions
         def arm_emit(event, *args)

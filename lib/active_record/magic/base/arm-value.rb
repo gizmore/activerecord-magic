@@ -1,19 +1,8 @@
 module ActiveRecord::Magic::Value
-  
+
   module Extend
+
     @@arm_class_variables = {}
-  
-    def register_class_variable(varname)
-      class_eval do |klass|
-        varname = varname.to_sym
-        vars = @@arm_class_variables[klass] ||= []
-        unless vars.include?(varname)
-          vars.push(varname)
-          instance_variable_set(:@plugin_vars, vars)
-        end
-        nil
-      end
-    end
     
     def define_class_variable(varname, value)
       class_eval do |klass|
@@ -40,11 +29,37 @@ module ActiveRecord::Magic::Value
         # end
       # end
     # end
+
+    def register_class_variable(varname)
+      class_eval do |klass|
+        varname = varname.to_sym
+        vars = @@arm_class_variables[klass] ||= []
+        unless vars.include?(varname)
+          vars.push(varname)
+          instance_variable_set(:@plugin_vars, vars)
+        end
+        nil
+      end
+    end
+    
   end
   
   module Include
+
+    def define_class_variable(varname, value)
+      self.class.define_class_variable(varname, value)
+    end
+
+    def set_class_variable(varname, value)
+      self.class.set_class_variable(varname, value)
+    end
+
+    def get_class_variable(varname, default=nil)
+      self.class.get_class_variable(varname, default)
+    end
+
   end
-  
+
 end
 
 Object.extend ActiveRecord::Magic::Value::Extend
