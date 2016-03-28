@@ -12,6 +12,10 @@ class ActiveRecord::Magic::InvalidOption < ActiveRecord::Magic::InvalidCode
     @given = given
     @key = key
   end
+  
+  def to_s
+    "#{@key} has an invalid or non matching class given: #{@given} - #{@given.class}. Example would be: #{@valid}"
+  end
 end
 
 class ActiveRecord::Magic::UnknownSetting < ActiveRecord::Magic::InvalidCode

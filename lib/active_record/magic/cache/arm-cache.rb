@@ -48,6 +48,10 @@ module ActiveRecord
               @arm_cache[id] || find(id)
             end
             
+            def self.cached_by_id(id)
+              @arm_cache[id]
+            end
+            
             # add a named cache slot
             def self.arm_named_cache(name, proc=nil)
               if proc.nil?
@@ -64,7 +68,11 @@ module ActiveRecord
 
             # by named cache
             def self.by(name, values={})
-              @arm_caches[name].get(values) || where(values).first
+              cached_by(name, values) || where(values).first
+            end
+            
+            def self.cached_by(name, values={})
+              @arm_caches[name].get(values)
             end
 
             # add
