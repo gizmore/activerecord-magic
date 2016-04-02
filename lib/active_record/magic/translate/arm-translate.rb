@@ -2,24 +2,19 @@ module ActiveRecord
   module Magic
     module Translate
       
-      arm_events
+      load "active_record/magic/translate/arm-translate-extend.rb"
       
-      @directories = []
-      
-      def self.add_directory(directory)
-        @directories.push(directory)
+      def self.init
+        ActiveRecord::Magic::Translate.load_i18n_dir(ActiveRecord::Magic::COREDIR)
       end
       
-      arm_subscribe(ActiveRecord::Magic::Event::INIT) do
-        
-      end
-      
-      module Extend
-        
-        def t(key)
-          key.to_s
+      def self.load_i18n_dir(directory)
+        Filewalker.traverse_dirs(directory, 'lang') do |filestub, dir|
+          Filewalker.traverse_files(dir, '*.yml') do |file|
+            #arm_log.debug("Loaded lang file: #{file}")
+            I18n.load_path.push(file)
+          end
         end
-        
       end
       
       module Decorator
@@ -35,3 +30,5 @@ module ActiveRecord
 end
 
 Object.extend ActiveRecord::Magic::Translate::Decorator
+
+ActiveRecord::Magic::Translate.init

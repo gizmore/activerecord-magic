@@ -17,6 +17,7 @@ module ActiveRecord
       end
       
       def self.generic(to, subject, body)
+        byebug
         if @arm_config.nil?
           raise ActiveRecord::Magic::MissingConfiguration.new("You have to call ActiveRecord::Magic::Mailer.configure in prior to use the mailer")
         end

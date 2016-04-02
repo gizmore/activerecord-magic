@@ -3,6 +3,8 @@ load "active_record/magic/version.rb"
 module ActiveRecord
   module Magic
     
+    COREDIR ||= File.dirname(__FILE__) + "/magic"
+    
     load "active_record/magic/base/arm-base.rb"
     load "active_record/magic/thread/arm-threads.rb"    
     load "active_record/magic/log/arm-log.rb"

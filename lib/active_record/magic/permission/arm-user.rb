@@ -6,8 +6,8 @@ module ActiveRecord
       
       arm_install('ActiveRecord::Magic::Group' => 1) do |migration|
         migration.create_table(table_name) do |t|
-          t.string :username, :limit => 64, :null => false
-          t.string :email,    :limit => 96, :null => false
+          t.string :name,    :limit => 64, :null => false
+          t.string :email,   :limit => 96, :null => false
           t.timestamps :null => false
         end
       end

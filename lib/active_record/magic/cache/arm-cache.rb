@@ -56,7 +56,9 @@ module ActiveRecord
             def self.arm_named_cache(name, proc=nil)
               if proc.nil?
                 proc = Proc.new{|values|values[name]}
-                metaclass.instance_eval{define_method("by_#{name}"){|value|by(name,{name:value})}}
+                metaclass.instance_eval{define_method("by_#{name}"){|value| by(name,{name:value})}}
+              else
+                metaclass.instance_eval{define_method("by_#{name}"){|value| @arm_caches[name].get(value) || where(value).first }}
               end
               @arm_caches[name] = ActiveRecord::Magic::Cache::Slot.new(proc)
             end

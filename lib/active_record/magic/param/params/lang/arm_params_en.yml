@@ -1,0 +1,54 @@
+en:
+  active_record:
+    magic:
+      param:
+        
+        examples: "e.g: %{example}"
+        err_type: "has to be a valid %{type}"
+        err_nil_not_allowed: "does not allow nil"
+  
+        boolean:
+          type: "Boolean"
+          description: "true or false"
+          err_unknown_input: "could not be intepreted as boolean"
+          boolean_true: "true"
+          boolean_false: "false"
+        
+        email:
+          type: "E-Mail"
+          description: "an email address"
+          err_format: "has an invalid format"
+          err_mx: "is not using a known mail hosting"
+          err_disposable: "is using disposable mailservice"
+          err_blacklisted: "is using a blacklisted mailservice"
+  
+        integer:
+          description: "an integer between %{min} and %{max}"
+          err_too_small: "has to be larger than %{min}"
+          err_too_large: "has to be smaller than %{max}"
+          err_not_between: "has to be between %{min} and %{max}"
+          err_not_exactly: "has to be exactly %{min}"
+          
+        pashword:
+          type: "Password"
+          description: "a secure and hashed password"
+          censored: "$B$CRYPT$HASH$"
+  
+        password:
+          type: "Password"
+          description: "a secret passphrase"
+          censored: "$CENSORED$"
+        
+        secret:
+          type: "Secret"
+          description: "a shared secret"
+  
+        string:
+          description: "a short text without whitespace"
+          err_too_small: "has to be longer than %{min} chars"
+          err_too_large: "has to be shorter than %{max} chars"
+          err_not_between: "has to be between %{min} and %{max} chars long"
+          err_not_exactly: "has to be exactly %{min} chars long"
+          
+        target:
+          err_no_match: "cannot not be found"
