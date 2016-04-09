@@ -36,6 +36,10 @@ module ActiveRecord
           get_value
         end
         
+        def display_value
+          @param.display_value
+        end
+        
       end
     end
   end

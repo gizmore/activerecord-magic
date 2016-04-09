@@ -29,7 +29,7 @@ module ActiveRecord
               setting(name).get_value
             end
       
-            def display_setting(name)
+            def show_setting(name)
               setting(name).display_value
             end
         

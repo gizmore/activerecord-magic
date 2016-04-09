@@ -40,8 +40,10 @@ module ActiveRecord
         end
         
         def signal(source, event, args)
-          unless @subscriptions.nil? || (!subscriptions.has_key?(event))
+          if @subscriptions && subscriptions.has_key?(event)
             subscriptions[event].signal(source, event, args)
+          else
+            bot.log.debug("Event::Container.signal => #{event}")
           end
           self
         end

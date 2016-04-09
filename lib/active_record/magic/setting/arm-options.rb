@@ -2,6 +2,8 @@ module ActiveRecord
   module Magic
     module Options
       
+      
+      
       def self.merge(given, default, validate=true)
         if validate
           given.each do |key,value|
@@ -13,10 +15,13 @@ module ActiveRecord
       end
       
       def self.option_class_matches?(a, b)
-        (a == nil) || (b == nil) || (a.class == b.class) || ((a == true || a == false) && (b == true || b == false))
+        (a == nil) || (b == nil) || ((a == true || a == false) && (b == true || b == false)) || (self.class_matches?(a, b))
       end
       
-      
+      def self.class_matches?(a, b)
+        ((a.class.ancestors & b.class.ancestors).grep(Class) - [Object, BasicObject]).any?
+      end
+
       # module Extend
         # def arm_options(given, default, validate=true)
           # ActiveRecord::Magic::Options.merge(given, default, validate)

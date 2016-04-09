@@ -29,11 +29,17 @@ module ActiveRecord
         end
         
         def signal(source, event, args)
-          arm_log.debug{"ARM::Event::Hook.signal(#{source.obj_id}-->#{event}-->#{@target.obj_id})"}
+          arm_log.debug{"ARM::Event::Hook.signal(#{source.obj_id}-->#{event.upcase}-->#{@target.obj_id})"}
           expired = expired?
           if !self_signal_blocked?(source)
             remove if expired
-            @block.call(source, args) unless expired
+            unless expired
+              begin
+                @block.call(source, args)
+              rescue => e
+                arm_log.exception(e)
+              end
+            end
             @calls += 1
             remove if exceeded?
           end
