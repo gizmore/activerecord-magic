@@ -34,36 +34,40 @@ M2) arm-upgrade: A global inline class installer and scheme beatuifier
     Installs itself a table for versioning the classes.
 
     # Usage
-    class User; arm_install(&migration) do ; end
-    class User; arm_upgrade(&migration) do ; end
-    class User; arm_downgrade(&migration) do; ; end
+    class Setting < ActiveRecord::Base
+      arm_install do |migration|
+        migration.create_table(table_name) do |t|
+          t.integer :entity_id,   :null => false
+          t.integer :entity_type, :null => false
+          t.string  :name,        :null => false
+          t.string  :value,       :null => false
+          t.timestamps :null => false
+        end
+      end
+    end
+    
+M3) arm-params: A way to decorate objects with typed parameters.
 
 
-M3) arm-enum: A global enum to int table
+M3) arm-setting: A way to persist any parameter option.
 
-    A proxy for polimorphism.
-    Gives classnames a global auto-inc guid.
+    Uses arm-params to validate and convert parameters.
 
     # Usage
-    class User; has_enums('arm_gender', 'gender'); end
-    class Gender; is_enum('arm_gender'); end
+    class User; arm_settings; arm_setting :name => 'some_setting', :type => float, :min => 1.0, :max => 2.0, :step => 0.1, default: 1.0
+    class User; arm_setting :name => password, type: :password_hash, hash_func: :md5, rounds: 5, default: "test", nil: false
     
-    # Tests
-    user.gender_id # => 12
-    user.gender #=> Gender
-    user.gender_id = 8 # => Arm::Exception::InvalidEnum, Arm::Exception::UnknownEnum,
-    user.gender = Gender.male # => 
-    User
-
 
 M4) A charset and collation attribute to character columns.
 
 
 M5) Global charset, timezone and locale tables
 
+    # Usage
+    require 'active_record/magic/locale.rb'
+    
 
-M6) Global setting helper
-    has_setting :name => password, type: :password_hash, hash_func: :md5, rounds: 5, default: "test", scope: [:global, :user], nil: false
+M6) Tiny mail helper
     
 M7) Global thread helpers
 
@@ -71,29 +75,22 @@ M8) Global database stats
 
 m9) Event and hook system
 
-m10) arm-vars: Global variable tracking / class / instance vars which are reload safe
+	Another event system?
+	Yes!
+	
+	arm-events are designed to feature my new mmorpg, ricer4-shadowlamb.
+	In an rpg i need group based event signaling.
+	The global cloud is the default container for publish/subscribe to work on.
+	Beside publish there is signal and emit.
+	
+	Signal sends to a single container only.
+	Publish defaults to a single container + the global. (default is global global only once)
+	Emit sends to all containers that subscribed the own container.
+	
+	Any object can subscribe to any containers.
 
-    A proxy for attr_reader etc which cleans variables on a reload.
-    Features class vars, instance vars and ?
-    
     # Usage
-    class User; ams_class_var('ams_varname'); end
-    class User; ams_clear_class_vars('ams_varname'); end
-    class User; ams_get_class_var('ams_varname', 'foo'); end
-    class User; ams_set_class_var('ams_varname', 'foo'); end
-    class User; ams_remove_class_var('ams_varname'); end
     
-    class User; ams_instance_var('ams_varname'); end;
-    class User; ams_set_instance_var('ams_varname', 'bar'); end;
-    class User; ams_r
-    ActiveRecord::Magic::Reload::reset()
-    ActiveRecord::Magic::Vars::reset()
-    
-    
-    
-  
-  user.cvar('
-
 
 ## Installation
 
