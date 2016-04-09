@@ -4,7 +4,7 @@ class ActiveRecord::Magic::Setting::SpecSetting < ActiveRecord::Base
   
   arm_settings
 
-  has_setting(name: :enabled, type: :boolean, permission: :responsible, default: false)
+  arm_setting(name: :enabled, type: :boolean, permission: :responsible, default: false)
   
   arm_install do |migration|
     migration.create_table(table_name) do |t|

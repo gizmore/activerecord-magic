@@ -142,9 +142,4 @@ describe ActiveRecord::Magic do
     end
   end
 
-  # SLIM POLYMORPHISM
-  describe ActiveRecord::Magic::Relation do
-    
-  end
-
 end

@@ -1,7 +1,16 @@
+# activerecord-magic
+# Gemfile
+#
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in activerecord-magic.gemspec
 gemspec
 
+group :development do 
+  gem 'filewalker', :path => '../filewalker'
+  gem 'chronic_duration', :path => '../chronic_duration'
+end
 
-gem 'filewalker', :path => '../filewalker'
+group :production do
+#  gem 'filewalker', :github => 'gizmore/filewalker'
+#  gem 'chronic_duration', :github => 'gizmore/chronic_duration'
+end
