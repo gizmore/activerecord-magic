@@ -21,7 +21,7 @@ module ActiveRecord
       
       def method_missing(name, *args)
         name = name.to_s
-        name.end_with?('=') ? arm_set(name[0...-1], args[0]) : arm_get(name)
+        name.end_with?('=') ? arm_set(name[0...-1], args[0]) : arm_get(name, *args)
       end
       
       private
