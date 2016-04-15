@@ -17,7 +17,7 @@ module ActiveRecord
       end
       
       def self.generic(to, subject, body)
-        byebug
+        #byebug
         if @arm_config.nil?
           raise ActiveRecord::Magic::MissingConfiguration.new("You have to call ActiveRecord::Magic::Mailer.configure in prior to use the mailer")
         end
@@ -42,7 +42,7 @@ module ActiveRecord
       def self.default_config
         arm_log.info{"You have to configure mail settings in your configuration file."}
         @arm_config.mail = {
-          enabled: true,
+          enabled: false,
           method: :smtp,
           from: 'robot@example.com',
           staff: ['admin@example.com', 'staff@example.com'],

@@ -18,5 +18,4 @@ module ActiveRecord
   end
 end
 
-byebug
 ActiveRecord::Base.extend ActiveRecord::Magic::Setting::Decorator
