@@ -1,32 +1,86 @@
 load 'active_record/magic/cache/ar-patch.rb'
 load 'active_record/magic/cache/arm-cache-slot.rb'
-
+#
+# arm_cache - ActiveRecord decorator
+#
+# @Usage
+# class Foo < ActiveRecord::Base
+#   arm_cache
+#   arm_cached?; self.do_i_wanna_cache_this_record?; end
+#   arm_named_cache :somefield  # adds Foo.by_somefield(somefield) assoc cache
+#   arm_named_cache :some_guid, Proc.new{|values|"#{values[:field1]}SEPARATOR#{values[:field2]}"} # for composite assoc cache Foo.by_some_guid(:field1 => a, :field2 => b)
+#
+# (c) 2016, gizmore@wechall.net
+#
 module ActiveRecord
   module Magic
     module Cache
       module Extend
 
-        # enable arm_cache
+        # enable arm_cache for an ActiveRecord
         def arm_cache
           class_eval do |klass|
-
-            arm_log.debug{"ARM::Cache::arm_cache enabled for #{klass.short_name}."}
+            
+#            arm_log.debug{"ARM::Cache::arm_cache enabled for #{klass.short_name}."}
 
             # the classes cache
+            def self.arm_get_cache; @arm_cache; end
+            def self.arm_get_caches; @arm_caches; end
             @arm_cache = {} # id
             @arm_caches = {} # named
             @arm_cache_on = true # currently enabled?
-            def self.arm_get_cache; @arm_cache; end
+            def arm_cached?; @arm_cached; end # row in cache?            
+            def arm_cached=(bool); @arm_cached = bool; end
+
             
-            # cache this row?
+            # cache this self one row?
             def arm_cache?
-              true
+              true # Override me :)
             end
+            
+            #######################
+            ### Update triggers ###
+            #######################
+            
+            # After a commit, update cache if necessary
+            klass.after_save :arm_update_cache
+            klass.after_destroy :arm_rollback_cache
+            klass.after_rollback :arm_rollback_cache
+            
+            def arm_rollback_cache
+              self.class.arm_cache_remove(self)
+            end
+            
+            def arm_update_cache
+              should_cache = arm_cache?
+              if should_cache != arm_cached?
+                should_cache ? self.class.arm_cache_add(self) : self.class.arm_cache_remove(self)
+              end
+            end
+            
+            ##############
+            ### Delete ###
+            ##############
+            def delete
+              result = super
+              self.class.arm_cache_remove(self)
+              result
+            end
+
+            def self.delete_all
+              result = super
+              arm_clear_cache
+              result
+            end
+            
+            ##############
+            ### Static ###
+            ##############
 
             # take record from cache
             def self.arm_cached(record)
-              return record unless @arm_cache_on && record.arm_cache?
-              return @arm_cache[record.id] || arm_cache_add(record)
+              return record unless @arm_cache_on && record.arm_cache? # don't cache 
+              return @arm_cache[record.id] || arm_cache_add(record)   # cache(d)
             end
 
             # uncached request
@@ -79,6 +133,7 @@ module ActiveRecord
 
             # add
             def self.arm_cache_add(record)
+              record.arm_cached = true
               @arm_cache[record.id] = record
               @arm_caches.each{|name,slot|slot.add(record)}
               record
@@ -86,6 +141,7 @@ module ActiveRecord
             
             # remove
             def self.arm_cache_remove(record)
+              record.arm_cached = false
               @arm_cache.delete(record.id)
               @arm_caches.each{|name,slot|slot.remove(record)}
               record
@@ -98,5 +154,5 @@ module ActiveRecord
   end
 end
 
-# make arm_cache available to turn class into cachable
+# make arm_cache available and turn AR class into a cachable
 ActiveRecord::Base.extend ActiveRecord::Magic::Cache::Extend

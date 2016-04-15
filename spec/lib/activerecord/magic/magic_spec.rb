@@ -105,6 +105,33 @@ describe ActiveRecord::Magic do
       tehrons = users.arm_get_cache.select{|key,record|record.object_id==tehron.object_id}
       expect(tehron.object_id).to be(tehrons[tehron.id].object_id)
     end
+    it "respects the individual arm_cached? method with auto cache update even on rollbacks" do
+      ActiveRecord::Magic::Spec::Server.delete_all
+      expect(ActiveRecord::Magic::Spec::Server.arm_get_cache.count).to eq(0)
+      server1 = ActiveRecord::Magic::Spec::Server.create!({name: 'localhost', online: true})
+      expect(server1.class.arm_get_cache.count).to eq(1)
+      server2 = ActiveRecord::Magic::Spec::Server.create!({name: 'google.de', online: false})
+      expect(server1.class.arm_get_cache.count).to eq(1)
+      server2.online = true; server2.save!
+      expect(server1.class.arm_get_cache.count).to eq(2)
+      begin
+        ActiveRecord::Base.transaction do
+          server3 = ActiveRecord::Magic::Spec::Server.create!({name: 'yahoo.biz', online: true})
+          expect(server1.class.arm_get_cache.count).to eq(3)
+          raise StandardError.new("Ooops")
+        end
+      rescue => e
+        expect(server1.class.arm_get_cache.count).to eq(2)
+      end
+      server3 = ActiveRecord::Magic::Spec::Server.create!({name: 'yahoo.biz', online: true})
+      expect(server1.class.arm_get_cache.count).to eq(3)
+      server3.destroy!
+      expect(server1.class.arm_get_cache.count).to eq(2)
+      server2.delete
+      expect(server1.class.arm_get_cache.count).to eq(ActiveRecord::Magic::Spec::Server.all.count)
+      ActiveRecord::Magic::Spec::Server.delete_all
+      expect(server1.class.arm_get_cache.count).to eq(0)
+    end
   end
   
   # LOCALE, TIMEZONE, ENCODING, ADVANCED CACHING

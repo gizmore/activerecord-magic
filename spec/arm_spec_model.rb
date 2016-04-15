@@ -22,6 +22,20 @@ class ActiveRecord::Magic::Spec::User < ActiveRecord::Base
   end
 end
 
+# Server test arm_cached? individual row caching for online == true
+class ActiveRecord::Magic::Spec::Server < ActiveRecord::Base
+  self.table_name = "armtest_server"
+  arm_cache # decorate
+  def arm_cache?; self.online == true; end # cache this server row?
+  arm_install do |migration|
+    migration.create_table(table_name) do |t|
+      t.string  :name, :length => 64, :null => false, :charset => :ascii, :collate => :ascii_bin
+      t.boolean :online, :default => false
+    end
+  end
+end
+
+
 
 # gender has a simple install step and uses arm_cache
 class ActiveRecord::Magic::Spec::Gender < ActiveRecord::Base
