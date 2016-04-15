@@ -42,6 +42,7 @@ module ActiveRecord
         # send an event to a container
         def arm_signal(target, event, *args)
           target.arm_container.signal(self, event, args)
+          arm_publish(event, *args)
           self
         end
 

@@ -35,7 +35,7 @@ module ActiveRecord
             remove if expired
             unless expired
               begin
-                @block.call(source, args)
+                @block.call(source, *args)
               rescue => e
                 arm_log.exception(e)
               end
