@@ -27,11 +27,10 @@ module ActiveRecord::Magic::Translate::Extend
   def tr(key, args={}); tt "ricer3.#{key}", args; end
   def tt(key, args={}); rt i18t(key, args); end
   def tt!(key, args={}); rt i18t!(key, args); end
-  
   def i18t!(key, args={}); I18n.t!(key, args); end
   def i18t(key, args={}) # Own I18n.t that rescues into key: arg.inspect
     begin
-      I18n.t!(key, args)
+      i18t!(key, args)
     rescue I18n::MissingTranslationData => e
       bot.log.error("Missing translation: #{key}")
       i18ti(key, args)
@@ -59,10 +58,12 @@ module ActiveRecord::Magic::Translate::Extend
   end
   
   def in_language(locale, &block)
-    old_locale = I18n.locale
-    back = yield
-    I18n.locale = old_locale
-    back
+    begin
+      old_locale = I18n.locale
+      return yield
+    ensure
+      I18n.locale = old_locale
+    end
   end
 
   #############
