@@ -33,8 +33,8 @@ module ActiveRecord
         mail.deliver if conf[:enabled]
       end
       
-      def self.exception(e)
-        generic(@arm_config.mail[:staff], "[#{@arm_config.app_name}] Exception", exception_body(e))
+      def self.exception(e, message=nil)
+        generic(@arm_config.mail[:staff], "[#{@arm_config.app_shortname()} #{@arm_config.environment()}] Exception", exception_body(e, message))
       end
       
       private
@@ -64,12 +64,15 @@ module ActiveRecord
         }
       end
       
-      def self.exception_body(e, message)
+      def self.exception_body(e, message=nil)
         body  = "Hi there,\n"
         body += "\n"
         body += "An exception occured in #{@arm_config.app_name}.\n"
+        body += "\n#{message}\n" if message
         body += "\n"
-        body += "Exception:\n"
+        body += "------------------------------------------------\n"
+        body += "\n"
+        body += "Exception: #{e.message}\n"
         body += "\n"
         body += "#{e.to_s}\n"
         body += "(#{e.class.name})\n"
