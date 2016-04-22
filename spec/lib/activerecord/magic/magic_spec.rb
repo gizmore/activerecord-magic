@@ -132,6 +132,22 @@ describe ActiveRecord::Magic do
       ActiveRecord::Magic::Spec::Server.delete_all
       expect(server1.class.arm_get_cache.count).to eq(0)
     end
+    it "caches records based on table name and features inheritance of AR records" do
+      class ActiveRecord::Magic::Spec::CacheInherit < ActiveRecord::Base
+        self.table_name = 'arm_cache_inherited'
+        arm_cache
+        arm_install do |m|
+          m.create_table table_name do |t|
+            t.string :name
+          end
+        end
+      end
+      class ActiveRecord::Magic::Spec::CacheInherited < ActiveRecord::Magic::Spec::CacheInherit
+      end
+      expect(ActiveRecord::Magic::Update.run).to be_truthy
+      ActiveRecord::Magic::Spec::CacheInherited.delete_all
+      test = ActiveRecord::Magic::Spec::CacheInherited.find_or_create_by(:name => 'test')
+    end
   end
   
   # LOCALE, TIMEZONE, ENCODING, ADVANCED CACHING
