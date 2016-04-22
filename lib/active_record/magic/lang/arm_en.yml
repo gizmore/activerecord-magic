@@ -1,2 +1,10 @@
 en:
-  test: test
+  active_record:
+    magic:
+      locale:
+        en: 'English'
+        bot: 'Bot'
+        fam: 'Famster'
+        ibdes: 'InterBotDataExchangeSpecification'
+        de: 'German'
+        fr: 'French'

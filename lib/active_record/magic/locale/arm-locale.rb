@@ -4,6 +4,7 @@ module ActiveRecord
       
       ARM_LOCALES ||= ['en', 'fam', 'bot', 'ibdes']
 
+      arm_i18n
       arm_cache
       arm_named_cache(:iso)
 
@@ -19,7 +20,22 @@ module ActiveRecord
         ARM_LOCALES.each{|iso| find_or_create_by!(:iso => iso) }
         I18n.available_locales.each{|iso| find_or_create_by!(:iso => iso) }
       end
+      
+      ####################
+      ### Translatable ###
+      ####################
+      def to_label
+        native_name rescue foreign_name(I18n.locale) rescue "[#{self.iso}]"
+      end
 
+      def native_name
+        foreign_name(self.iso)
+      end
+      
+      def foreign_name(locale)
+        in_language(locale) { return t!(self.iso.to_sym) }
+      end
+      
     end
   end
 end
