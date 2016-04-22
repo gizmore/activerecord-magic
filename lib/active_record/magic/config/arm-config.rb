@@ -7,6 +7,8 @@ module ActiveRecord
       
       require 'yaml'
       
+      attr_reader :path
+      
       def initialize(path)
         arm_init_config(path)
       end
@@ -27,14 +29,15 @@ module ActiveRecord
       private
       
       def arm_init_config(path)
-        @path = path
         begin
+          @path = path
           @store = YAML.load_file(path)
         rescue Errno::ENOENT => e
           @store = {}
-          arm_set(:app_name, 'Application')
-          arm_set(:environment, 'development')
+          arm_set(:app_name, 'Application Foobar')
+          arm_set(:app_shortname, 'Application')
           arm_set(:arm_version, ::ActiveRecord::Magic::VERSION)
+          arm_set(:environment, 'DEV/PROD')
         end
         self
       end
