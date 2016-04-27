@@ -24,10 +24,11 @@ module ActiveRecord
 #            arm_log.debug{"ARM::Cache::arm_cache enabled for #{klass.short_name}."}
 
             # the classes cache
-            def self.arm_get_cache; @arm_cache; end
-            def self.arm_get_caches; @arm_caches; end
-            @arm_cache = {} # id
-            @arm_caches = {} # named
+            def self.arm_get_cache; @@arm_cache[table_name] ||= {}; end
+            def self.arm_get_caches; @@arm_caches[table_name] ||= {}; end
+            
+            @@arm_cache ||= {} # id
+            @@arm_caches ||= {} # named
             @arm_cache_on = true # currently enabled?
             def arm_cached?; @arm_cached; end # row in cache?            
             def arm_cached=(bool); @arm_cached = bool; end
@@ -80,7 +81,7 @@ module ActiveRecord
             # take record from cache
             def self.arm_cached(record)
               return record unless @arm_cache_on && record.arm_cache? # don't cache 
-              return @arm_cache[record.id] || arm_cache_add(record)   # cache(d)
+              return arm_get_cache[record.id] || arm_cache_add(record)   # cache(d)
             end
 
             # uncached request
@@ -93,33 +94,34 @@ module ActiveRecord
             
             # clear cache
             def self.arm_clear_cache
-              @arm_cache = {}
-              @arm_caches.each{|name,slot|slot.clear}
+              arm_get_cache.clear
+              arm_get_caches.each{|name,slot|slot.clear}
             end
             
             # get by id
             def self.by_id(id)
-              @arm_cache[id] || find(id)
+              arm_get_cache[id] || find(id)
             end
             
             def self.cached_by_id(id)
-              @arm_cache[id]
+              arm_get_cache[id]
             end
             
             # add a named cache slot
             def self.arm_named_cache(name, proc=nil)
+              name = name.to_sym
               if proc.nil?
                 proc = Proc.new{|values|values[name]}
                 metaclass.instance_eval{define_method("by_#{name}"){|value| by(name,{:"#{name}" => value})}}
               else
-                metaclass.instance_eval{define_method("by_#{name}"){|value| @arm_caches[name].get(value) || where(value).first }}
+                metaclass.instance_eval{define_method("by_#{name}"){|value| arm_get_caches[name].get(value) || where(value).first }}
               end
-              @arm_caches[name] = ActiveRecord::Magic::Cache::Slot.new(proc)
+              arm_get_caches[name] = ActiveRecord::Magic::Cache::Slot.new(proc)
             end
             
             # get a named cache slot
             def self.arm_get_named_cache(name)
-              @arm_caches[name]
+              arm_get_caches[name]
             end
 
             # by named cache
@@ -128,22 +130,22 @@ module ActiveRecord
             end
             
             def self.cached_by(name, values={})
-              @arm_caches[name].get(values)
+              arm_get_caches[name.to_sym].get(values)
             end
 
             # add
             def self.arm_cache_add(record)
               record.arm_cached = true
-              @arm_cache[record.id] = record
-              @arm_caches.each{|name,slot|slot.add(record)}
+              arm_get_cache[record.id] = record
+              arm_get_caches.each{|name,slot|slot.add(record)}
               record
             end
             
             # remove
             def self.arm_cache_remove(record)
               record.arm_cached = false
-              @arm_cache.delete(record.id)
-              @arm_caches.each{|name,slot|slot.remove(record)}
+              arm_get_cache.delete(record.id)
+              arm_get_caches.each{|name,slot|slot.remove(record)}
               record
             end
 
