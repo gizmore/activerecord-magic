@@ -2,14 +2,14 @@ module ActiveRecord
   module Magic
     class Locale < ActiveRecord::Base
       
+      self.table_name = 'arm_locales'
+
       ARM_LOCALES ||= ['en', 'fam', 'bot', 'ibdes']
 
       arm_i18n
       arm_cache
       arm_named_cache(:iso)
 
-      self.table_name = 'arm_locales'
-      
       arm_install do |migration|
         migration.create_table(table_name) do |t|
           t.string :iso, :null => false, :limit => 16, :charset => :ascii, :collation => :ascii_bin

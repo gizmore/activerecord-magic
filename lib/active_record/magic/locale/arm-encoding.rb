@@ -2,10 +2,10 @@ module ActiveRecord
   module Magic
     class Encoding < ActiveRecord::Base
       
+      self.table_name = 'arm_encodings'
+
       arm_cache
       arm_named_cache(:iso)
-      
-      self.table_name = 'arm_encodings'
       
       arm_install do |migration|
         migration.create_table(table_name) do |t|
