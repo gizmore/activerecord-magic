@@ -1,4 +1,4 @@
-class ActiveRecord::Magic::InvalidParameter < StandardError; end
+class ActiveRecord::Magic::InvalidParameter < ActiveRecord::Magic::Exception; end
 module ActiveRecord
   module Magic
     class Parameter
@@ -12,12 +12,17 @@ module ActiveRecord
         klass.new.from_setting_options(options)
       end
       
+      def default_options
+        {}
+      end
+      
       def initialize
+        @options = default_options;
         @value = nil
       end
       
       def from_setting_options(options)
-        @options = options
+        @options.merge!(options)
         @value = options[:default] 
         self
       end
@@ -25,8 +30,8 @@ module ActiveRecord
       ##############
       ### Errors ###
       ##############
-      def invalid!(key)
-        raise ActiveRecord::Magic::InvalidParameter.new(t(key))
+      def invalid!(key, args={})
+        raise ActiveRecord::Magic::InvalidParameter.new(t(key, args))
       end
       
       ###############
@@ -106,9 +111,12 @@ module ActiveRecord
       ######################
       ### Convert In/Out ###
       ######################
+      def input_to_value(input); input.to_s; end
+      def value_to_input(value); value.to_s; end
+      
       def values_to_input(values)
         if doing_multiple?
-          inputs = Array(values).collect{|value| value_to_input(value)}
+          inputs = Array(values).collect{|value| _value_to_input(value)}
           inputs.length > 1 ? "#{inputs.join(',')}" : inputs[0]
         else
           value_to_input(values)
@@ -117,9 +125,9 @@ module ActiveRecord
       
       def input_to_values(inputs)
         if doing_multiple?
-          inputs.split(',').collect{|input| input_to_value(input) }
+          inputs.split(',').collect{|input| _input_to_value(input) }
         else
-          input_to_value(inputs)
+          _input_to_value(inputs)
         end
       end
       
@@ -129,6 +137,20 @@ module ActiveRecord
 
       def input_to_value!(value)
         input_to_values(value)
+      end
+      
+      def _input_to_value(input)
+        value = input_to_value(input)
+        validate!(value)
+        invalid! unless value
+        value
+      end
+
+      def _value_to_input(value)
+        validate!(value)
+        input = value_to_input(value)
+        invalid! unless input
+        input
       end
 
     end
