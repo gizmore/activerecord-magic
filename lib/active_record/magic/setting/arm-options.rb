@@ -1,8 +1,11 @@
+# Module
+# ActiveRecord::Magic::Options
+#
+# Merge options and roughly validate them.
+#
 module ActiveRecord
   module Magic
     module Options
-      
-      
       
       def self.merge(given, default, validate=true)
         if validate
@@ -14,6 +17,8 @@ module ActiveRecord
         given.reverse_merge!(default)
       end
       
+      private
+      
       def self.option_class_matches?(a, b)
         (a == nil) || (b == nil) || ((a == true || a == false) && (b == true || b == false)) || (self.class_matches?(a, b))
       end
@@ -21,18 +26,6 @@ module ActiveRecord
       def self.class_matches?(a, b)
         ((a.class.ancestors & b.class.ancestors).grep(Class) - [Object, BasicObject]).any?
       end
-
-      # module Extend
-        # def arm_options(given, default, validate=true)
-          # ActiveRecord::Magic::Options.merge(given, default, validate)
-        # end
-      # end
-#       
-      # module Include
-        # def arm_options(given, default, validate=true)
-          # ActiveRecord::Magic::Options.merge(given, default, validate)
-        # end
-      # end
 
     end
   end
