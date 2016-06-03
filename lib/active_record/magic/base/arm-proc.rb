@@ -21,7 +21,6 @@ module ActiveRecord
       end
       
       def self.deduplicate(object, block)
-        byebug
         pos = "#{object.object_id}@#{position(block)}"
         @@duplicates.delete(pos)
       end
