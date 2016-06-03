@@ -47,7 +47,7 @@ module ActiveRecord
           end
           self
         end
-        
+
       end
     end
   end

@@ -24,13 +24,12 @@ module ActiveRecord
         # subscribe to an event and target.
         def arm_subscribe(event, target=nil, &block)
           raise ActiveRecord::Magic::InvalidCode.new("arm_subscribe requires a block given") unless block_given?
-#          raise ActiveRecord::Magic::DuplicateEvent.new(self, event, block.source_location.join(' ')) 
+          target ||= arm_globe
           unless ActiveRecord::Magic::Block.duplicate?(self, block)
-            target ||= arm_globe
             arm_log.debug{"ARM::Event::arm_subscribe '#{event.upcase}' for #{target.obj_id} at #{block.short_location}"}
-            container = target.arm_container
-            container.subscribe(event, self, block)
+            return target.arm_container.subscribe(event, self, block)
           end
+          nil
         end
         
         # send an event to globe

@@ -47,6 +47,7 @@ module ActiveRecord
         end
         
         def remove
+          ActiveRecord::Magic::Block.deduplicate(@target, @block)
           @block = nil
           @subscriptions.remove(self)
           if is_static?
