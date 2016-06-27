@@ -12,7 +12,7 @@ module ActiveRecord::Magic
     
     def validate!(value)
       invalid_type! unless value.is_a?(::String)
-      validate_pattern!(value) unless options[:pattern].nil?
+      validate_pattern!(value) if options[:pattern]
       validate_range!(value.length)
     end
 

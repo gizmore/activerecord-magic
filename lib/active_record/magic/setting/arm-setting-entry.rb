@@ -12,7 +12,7 @@ module ActiveRecord
         arm_install do |migration|
           migration.create_table(table_name) do |t|
             t.integer :entity_id,   :null => false
-            t.integer :entity_type, :null => false
+            t.string  :entity_type, :null => false, :limit => 128, :charset => :ascii, :collation => :ascii_bin
             t.string  :name,        :null => false, :limit => 32,  :charset => :ascii, :collation => :ascii_bin
             t.string  :value,       :null => false
             t.timestamps :null => false
