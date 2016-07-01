@@ -10,6 +10,7 @@ module ActiveRecord
         def arm_settings
           class_eval do |klass|
             klass.extend ActiveRecord::Magic::Setting::Extend
+            klass.send(:include, ActiveRecord::Magic::Setting::Include)
           end
         end
       end
