@@ -6,7 +6,7 @@ module ActiveRecord::Magic
     def display_example; enum_options.join('|'); end
   
     def input_to_value(input)
-      input = input.to_sym
+      input = input.to_s
       invalid!(:err_unknown_enum) unless enum_options.include?(input)
       input
     end
@@ -20,6 +20,7 @@ module ActiveRecord::Magic
     end
     
     def enum_options
+      option(:enums).map!{|enum|enum.to_s}
       option(:enums)
     end
   

@@ -139,6 +139,9 @@ module ActiveRecord
         input_to_values(value)
       end
       
+      def validate!(value)
+      end
+      
       def _input_to_value(input)
         value = input_to_value(input)
         validate!(value)
