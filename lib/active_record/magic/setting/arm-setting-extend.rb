@@ -31,11 +31,11 @@ module ActiveRecord
         ### Cache and magic ###
         #######################
         def db_settings
-          self.class.define_class_variable(:@db_settings, {})
+          self.define_class_variable(:@db_settings, {})
         end
         
         def memory_settings
-          self.class.define_class_variable(:@mem_settings, [])
+          self.define_class_variable(:@mem_settings, [])
         end
         
         def memory_setting(name)
@@ -48,7 +48,7 @@ module ActiveRecord
         
         def db_setting(name, create=true)
           if cached = db_settings[name]
-#                return cached if cached.persisted?
+            #return cached if cached.persisted?
           elsif options = memory_setting(name)
             cached = ActiveRecord::Magic::Setting::Entry.find_or_initialize_by(name: name, entity: self)
             cached.init_param(options)
