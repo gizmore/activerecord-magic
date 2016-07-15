@@ -2,6 +2,8 @@ module ActiveRecord
   module Magic
     module Setting
       class Entry < ActiveRecord::Base
+        
+        attr_reader :param
 
         self.table_name = 'arm_settings'
         

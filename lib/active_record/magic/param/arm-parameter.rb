@@ -155,6 +155,10 @@ module ActiveRecord
         invalid! unless input
         input
       end
+      
+      def equals_value?(value)
+        @value == value
+      end
 
     end
   end
