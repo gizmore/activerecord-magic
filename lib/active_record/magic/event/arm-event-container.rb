@@ -7,6 +7,12 @@ module ActiveRecord
         
         # attr_reader :subscriptions
         
+        @@total_events = 0
+        
+        def self.total_events
+          @@total_events
+        end
+        
         def arm_container
           self
         end
@@ -20,7 +26,12 @@ module ActiveRecord
         end
         
         def subscriptions_for(event)
-          subscriptions[event] ||= ActiveRecord::Magic::Event::Subscriptions.new
+          subscriptions[event] ||= new_subscriptions_for(event)
+        end
+        
+        def new_subscriptions_for(event)
+          @@total_events += 1
+          ActiveRecord::Magic::Event::Subscriptions.new
         end
         
         def merge(container)
